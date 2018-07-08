@@ -33,17 +33,15 @@ return aminoacidos[num];
 } 
 
 
-void *clienteFuncao() {
+void *clienteFuncao(*char ipServidor) {
 	char *rem_hostname;
 	int rem_port;
 	struct sockaddr_in rem_addr;
 	int rem_sockfd;
-	char linha[81];	
-
 
 	/* Construcao da estrutura do endereco local */
 	/* Preenchendo a estrutura socket loc_addr (família, IP, porta) */
-	rem_hostname = "127.0.0.1";
+	rem_hostname = ipServidor;
 	rem_port = atoi("123");
 	rem_addr.sin_family = AF_INET; /* familia do protocolo*/
 	rem_addr.sin_addr.s_addr = inet_addr(rem_hostname); /* endereco IP local */
@@ -81,6 +79,7 @@ size_t recv_buffer_len = sizeof(recv_buffer);
 /* Recebendo mensagem */
 recv(rem_sockfd, &recv_buffer, recv_buffer_len, 0);
 /* Imprimindo resultados */
+
 printf("\t Method: %c\n", recv_buffer.method);
 printf("\t Size: %d\n", recv_buffer.size);
 printf("\t Payload: %s\n", recv_buffer.payload);
@@ -162,8 +161,10 @@ close(loc_sockfd);
     pthread_create(&servidor,NULL, servidorFuncao, NULL);
     sleep(2);
     int i;
-    for(i=0; i<N_CLIENTES; i++) {
-       pthread_create(&cliente[i], NULL, clienteFuncao, NULL);
+    i=0;
+   while(fgets(ipLinha, 20, fips) != NULL) {
+       pthread_create(&cliente[i], NULL, clienteFuncao, ipLinha);
+       i++;
    	}
    	    pthread_join(servidor, &thread_result_servidor);
 
