@@ -27,10 +27,6 @@ void *clienteFuncao() {
 	int rem_sockfd;
 	char linha[81];	
 
-	if (argc != 3) {
-		printf("Parametros:<remote_host> <remote_port> \n");
-		exit(1);
-	}
 
 	/* Construcao da estrutura do endereco local */
 	/* Preenchendo a estrutura socket loc_addr (família, IP, porta) */
@@ -88,10 +84,6 @@ void *servidorFuncao(){
 	/* Estrutura: familia + endereco IP + porta */
 	struct sockaddr_in loc_addr;
 	
-	if (argc != 2) {
-		printf("Parametros: <local_port> \n");
-		exit(1);
-	}
 
    	/* Cria o socket para enviar e receber datagramas */
 	/* parametros(familia, tipo, protocolo) */
@@ -106,7 +98,7 @@ void *servidorFuncao(){
 	/* Preenchendo a estrutura socket loc_addr (família, IP, porta) */
 	loc_addr.sin_family = AF_INET; /* familia do protocolo*/
 	loc_addr.sin_addr.s_addr = INADDR_ANY; /* endereco IP local */
-	loc_addr.sin_port = htons(atoi(argv[1])); /* porta local  */
+	loc_addr.sin_port = htons(123); /* porta local  */
 	bzero(&(loc_addr.sin_zero), 8);
 
    	/* Bind para o endereco local*/
