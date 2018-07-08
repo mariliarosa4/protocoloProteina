@@ -162,6 +162,13 @@ close(loc_sockfd);
     sleep(2);
     int i;
     i=0;
+    FILE *fips;
+	if ((fips = fopen("ips_servidores.txt", "r+")) == NULL) {
+		printf("Error! opening file");
+		return 1;
+	}
+	char ipLinha[20];
+
    while(fgets(ipLinha, 20, fips) != NULL) {
        pthread_create(&cliente[i], NULL, clienteFuncao, ipLinha);
        i++;
