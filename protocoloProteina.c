@@ -24,30 +24,13 @@ typedef struct {
 } aatp_msg;
 
 char gerarAminoacido(){
-	char aminoacidos[61]= ["A",
-	"R","R",
-	"N","N","N","N",
-	"D",
-	"C",
-	"Q",
-	"E",
-	"G","G","G","G",
-	"H","H","H","H",
-	"I","I","I","I","I","I","I","I",
-	"L",
-	"K",
-	"M","M","M","M","M","M","M","M",
-	"F",
-	"P","P","P","P",
-	"S",
-	"T",
-	"W","W","W","W","W","W","W","W",
-	"Y","Y","Y","Y","Y","Y","Y","Y",
-	"V"
-	];
-
-
-} 	
+char aminoacidos[61]= "ARRNNNNDCQEGGGGHHHHIIIIIIIILKMMMMMMMMFPPPPSTWWWWWWWWYYYYYYYYV";
+srand(time(NULL));
+int num = rand()%61;
+printf("%d", num);
+printf("%c", aminoacidos[num]);
+return aminoacidos[num];
+} 
 
 
 void *clienteFuncao() {
