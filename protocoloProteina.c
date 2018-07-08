@@ -20,7 +20,7 @@ typedef struct {
     char payload[5];
 } aatp_msg;
 
-void *cliente() {
+void *clienteFuncao() {
 	char *rem_hostname;
 	int rem_port;
 	struct sockaddr_in rem_addr;
@@ -81,7 +81,7 @@ printf("\t Payload: %s\n", recv_buffer.payload);
 	close(rem_sockfd);
 }
  
-void *servidor(){
+void *servidorFuncao(){
 		/* Variaveis Locais */
 	int loc_sockfd, loc_newsockfd, tamanho;
 	char linha[81];		
@@ -153,8 +153,8 @@ close(loc_sockfd);
 }
  main(){
  
-        pthread_create(&cliente, NULL, cliente, NULL);
-        pthread_create(&servidor,NULL, servidor, NULL);
+        pthread_create(&cliente, NULL, clienteFuncao, NULL);
+        pthread_create(&servidor,NULL, servidorFuncao, NULL);
 
         pthread_join(cliente,&thread_result_cliente);
         pthread_join(servidor, &thread_result_servidor);
