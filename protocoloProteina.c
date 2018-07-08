@@ -8,7 +8,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define N_CLIENTES 2
+#define N_CLIENTES 1
 void *thread_result_cliente;
 void *thread_result_servidor;
 
