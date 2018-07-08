@@ -162,7 +162,7 @@ m.size = recv_buffer.size; /* Enviar a quantidade que foi solicitada */
    caso seja feita uma solicitação de menos de 5 aminoácidos */
 memset(&m.payload, 0, sizeof m.payload);
 /* Preencher com os dados */
-for (int j=0;j<m.size;j++){
+for (uint8_t j=0;j<m.size;j++){
 	m.payload[j] =gerarAminoacido();
 }
 
