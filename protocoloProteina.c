@@ -47,7 +47,7 @@ void *clienteFuncao() {
 	rem_port = atoi("123");
 	rem_addr.sin_family = AF_INET; /* familia do protocolo*/
 	rem_addr.sin_addr.s_addr = inet_addr(rem_hostname); /* endereco IP local */
-//	rem_addr.sin_port = htons(rem_port); /* porta local  */
+	rem_addr.sin_port = htons(rem_port); /* porta local  */
 
    	/* Cria o socket para enviar e receber datagramas */
 	/* parametros(familia, tipo, protocolo) */
