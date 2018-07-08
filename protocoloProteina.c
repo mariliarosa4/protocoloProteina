@@ -8,7 +8,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define N_CLIENTES 1
+#define N_CLIENTES 2
 void *thread_result_cliente;
 void *thread_result_servidor;
 
@@ -149,12 +149,13 @@ close(loc_sockfd);
  
      
     pthread_create(&servidor,NULL, servidorFuncao, NULL);
-    pthread_join(servidor, &thread_result_servidor);
     sleep(2);
     int i;
     for(i=0; i<N_CLIENTES; i++) {
        pthread_create(&cliente[i], NULL, clienteFuncao, NULL);
    	}
+   	    pthread_join(servidor, &thread_result_servidor);
+
     for(i=0; i<N_CLIENTES; i++) {
         pthread_join(cliente[i],&thread_result_cliente);
 	}
