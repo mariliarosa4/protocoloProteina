@@ -41,8 +41,9 @@ void *clienteFuncao(void *ipServidor) {
 
 	/* Construcao da estrutura do endereco local */
 	/* Preenchendo a estrutura socket loc_addr (família, IP, porta) */
-	printf("%s \n", ipServidor);
+	
 	rem_hostname = ipServidor;
+	printf("%s \n", rem_hostname);
 	rem_port = atoi("123");
 	rem_addr.sin_family = AF_INET; /* familia do protocolo*/
 	rem_addr.sin_addr.s_addr = inet_addr(rem_hostname); /* endereco IP local */
