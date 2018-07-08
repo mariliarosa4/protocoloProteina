@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
+#include<time.h>
 
 #define N_CLIENTES 2
 void *thread_result_cliente;
@@ -21,6 +22,33 @@ typedef struct {
     char method;
     char payload[5];
 } aatp_msg;
+
+char gerarAminoacido(){
+	char aminoacidos[61]= ["A",
+	"R","R",
+	"N","N","N","N",
+	"D",
+	"C",
+	"Q",
+	"E",
+	"G","G","G","G",
+	"H","H","H","H",
+	"I","I","I","I","I","I","I","I",
+	"L",
+	"K",
+	"M","M","M","M","M","M","M","M",
+	"F",
+	"P","P","P","P",
+	"S",
+	"T",
+	"W","W","W","W","W","W","W","W",
+	"Y","Y","Y","Y","Y","Y","Y","Y",
+	"V"
+	];
+
+
+} 	
+
 
 void *clienteFuncao() {
 	char *rem_hostname;
@@ -129,16 +157,15 @@ recv(loc_newsockfd, &recv_buffer, recv_buffer_len, 0);
 aatp_msg m = { 0 };
 /* Preenchendo dados */
 m.method = 'R'; /* Requisição */
-m.size = 5; /* Enviar a quantidade que foi solicitada */
+m.size = recv_buffer.size; /* Enviar a quantidade que foi solicitada */
 /* Zerando payload para evitar enviar lixo
    caso seja feita uma solicitação de menos de 5 aminoácidos */
 memset(&m.payload, 0, sizeof m.payload);
 /* Preencher com os dados */
-m.payload[0] = 'A';
-m.payload[1] = 'B';
-m.payload[2] = 'C';
-m.payload[3] = 'D';
-m.payload[4] = 'E';
+for (int j=0;j<m.size;j++){
+	m.payload[j] =gerarAminoacido();
+}
+
 /* Enviando solicitação */
 int r = send(loc_newsockfd, &m, sizeof(m), 0);
 
