@@ -7,10 +7,12 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
+
+#define N_CLIENTES 2
 void *thread_result_cliente;
 void *thread_result_servidor;
 
-pthread_t cliente;
+pthread_t cliente[N_CLIENTES];
 pthread_t servidor;
 
 //struct mensagem
@@ -145,10 +147,15 @@ close(loc_sockfd);
 }
  main(){
  
-        pthread_create(&cliente, NULL, clienteFuncao, NULL);
-        pthread_create(&servidor,NULL, servidorFuncao, NULL);
-
-        pthread_join(cliente,&thread_result_cliente);
-        pthread_join(servidor, &thread_result_servidor);
+     
+    pthread_create(&servidor,NULL, servidorFuncao, NULL);
+    pthread_join(servidor, &thread_result_servidor);
+    sleep(2);
+    for(i=0; i<N_CLIENTES; i++) {
+       pthread_create(&cliente[i], NULL, clienteFuncao, NULL);
+   	}
+    for(i=0; i<N_CLIENTES; i++) {
+        pthread_join(cliente[i],&thread_result_cliente);
+	}
 
 }	
