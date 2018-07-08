@@ -33,7 +33,7 @@ return aminoacidos[num];
 } 
 
 
-void *clienteFuncao(*char ipServidor) {
+void *clienteFuncao(void *ipServidor) {
 	char *rem_hostname;
 	int rem_port;
 	struct sockaddr_in rem_addr;
