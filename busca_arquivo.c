@@ -4,13 +4,17 @@
 char *procuraAmino(char *proteina, char *amino, char *repl) {
   static char buffer[609];
   char *p;
-  if (!(p = strstr(proteina, amino)))
-   	return proteina;
-  	strncpy(buffer, proteina, p-proteina);  
+  if (!(p = strstr(proteina, amino))){
+  	return "xx";
+  }else{
+  		strncpy(buffer, proteina, p-proteina);  
   	buffer[p-proteina] = 0;
   	sprintf(buffer+(p-proteina), "%s%s", repl, p+strlen(amino));
   	
   	return buffer;
+  }
+   	
+  
   }
   
 int main()
@@ -25,13 +29,16 @@ int main()
 
 	while(fgets(c, 700, fptr) != NULL) {
 		char *proteinaMudada;
-		proteinaMudada = procuraAmino(c,"M","-");
+		proteinaMudada = procuraAmino(c,"B","-");
 		printf(" %s", proteinaMudada);
 		FILE *p;
 		if (!(p = fopen("proteina.txt","w")))  {                         
 	  		printf("Erro! Impossivel abrir o arquivo!\n");
 	  		exit(1);
   		}
+  		if (proteinaMudada=="xx"){
+  			printf("farsa");
+		  }
 	fprintf(p,"%s", proteinaMudada);
 	fclose(p);
 

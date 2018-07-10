@@ -1,0 +1,4 @@
+git config --global credential.helper cache
+git config --global credential.helper 'cache --timeout=3600'
+mkdir compartilhado_host
+sudo mount -t vboxsf trabalho2_redes ~/compartilhado/
