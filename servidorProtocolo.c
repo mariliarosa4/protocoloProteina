@@ -8,11 +8,13 @@
 #include <string.h>
 #include <stdlib.h>
 #include<time.h>
+
+#define PORTA 1337
 char gerarAminoacido() {
-    char aminoacidos[61]= "ARRNNNNDCQEGGGGHHHHIIIIIIIILKMMMMMMMMFPPPPSTWWWWWWWWYYYYYYYYV";
-    srand(time(NULL));
-    sleep(1);
-    int num = rand()%61;
+  //  char aminoacidos[61]= "ARRNNNNDCQEGGGGHHHHIIIIIIIILKMMMMMMMMFPPPPSTWWWWWWWWYYYYYYYYV";
+  char aminoacidos[20]= "ARNDCQEGHILKMFPSTWYV";
+
+    int num = rand()%20;//61
     printf("%d", num);
     printf("%c", aminoacidos[num]);
     return aminoacidos[num];
@@ -23,6 +25,7 @@ typedef struct {
     char payload[5];
 } aatp_msg;
 int main() {
+	    srand(time(NULL));
     /* Variaveis Locais */
     int loc_sockfd, loc_newsockfd, tamanho;
 
@@ -43,7 +46,7 @@ int main() {
     /* Preenchendo a estrutura socket loc_addr (família, IP, porta) */
     loc_addr.sin_family = AF_INET; /* familia do protocolo*/
     loc_addr.sin_addr.s_addr = INADDR_ANY; /* endereco IP local */
-    loc_addr.sin_port = htons(123); /* porta local  */
+    loc_addr.sin_port = htons(PORTA); /* porta local  */
     bzero(&(loc_addr.sin_zero), 8);
 
     /* Bind para o endereco local*/
@@ -72,7 +75,7 @@ int main() {
         /* Inicializando mensagem */
         aatp_msg m = { 0 };
         /* Preenchendo dados */
-        m.method = 'R'; /* Requisição */
+        m.method = 'R'; /* resposta */
         m.size = recv_buffer.size; /* Enviar a quantidade que foi solicitada */
         /* Zerando payload para evitar enviar lixo
            caso seja feita uma solicitação de menos de 5 aminoácidos */
@@ -87,7 +90,9 @@ int main() {
                 m.payload[k] =gerarAminoacido();
             }
         }
-
+printf("\t Method: %c\n", m.method);
+printf("\t Size: %d\n", m.size);
+printf("\t Payload: %s\n", m.payload);
         /* Enviando solicitação */
         int r = send(loc_newsockfd, &m, sizeof(m), 0);
 
