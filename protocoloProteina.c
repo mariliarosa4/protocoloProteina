@@ -10,7 +10,7 @@
 #include<time.h>
 
 #define PORTA 1337
-#define N_CLIENTES 2 //N CLIENTES = N SERVIDORES um cliente pra cada servidor disponivel
+#define N_CLIENTES 8 //N CLIENTES = N SERVIDORES um cliente pra cada servidor disponivel
 void *thread_result_cliente;
 void *thread_result_servidor;
 void *thread_result_ribossomo;
@@ -50,6 +50,8 @@ char *procuraAmino(char *proteina, char *amino, char *repl) {
 
 void *clienteFuncao(void *j) {
     int iCliente = *(int *)j;
+   // printf("comecando cliente %d \n", iCliente);
+  
     flagClienteServidorAtivo[iCliente] = 1;
     while(flagClienteServidorAtivo[iCliente]==1) {
         char *rem_hostname;
@@ -61,25 +63,21 @@ void *clienteFuncao(void *j) {
         /* Preenchendo a estrutura socket loc_addr (família, IP, porta) */
 
         rem_hostname = (ipLinha[iCliente]);
-        rem_port = atoi(PORTA);
+        rem_port = atoi("1337");
         rem_addr.sin_family = AF_INET; /* familia do protocolo*/
         rem_addr.sin_addr.s_addr = inet_addr(rem_hostname); /* endereco IP local */
         rem_addr.sin_port = htons(rem_port); /* porta local  */
 
-        /* Cria o socket para enviar e receber datagramas */
-        /* parametros(familia, tipo, protocolo) */
         rem_sockfd = socket(AF_INET, SOCK_STREAM, 0);
 
         if (rem_sockfd < 0) {
             perror("Criando stream socket");
             exit(1);
         }
-        printf("> Conectando no servidor '%s:%d'\n", rem_hostname, rem_port);
 
-        /* Estabelece uma conexão remota */
-        /* parametros(descritor socket, estrutura do endereco remoto, comprimento do endereco) */
         if (connect(rem_sockfd, (struct sockaddr *) &rem_addr, sizeof(rem_addr)) < 0) {
             perror("Conectando stream socket");
+            flagClienteServidorAtivo[iCliente] = 0;
             //	exit(1);
         } else {
 
@@ -89,30 +87,19 @@ void *clienteFuncao(void *j) {
             /* Preenchendo dados */
             m.method = 'S'; /* Solicitação */
             m.size = 5;
-            /* Zerando payload */
+
             memset(&m.payload, 0, sizeof m.payload);
-            /* Enviando solicitação */
+
             int r = send(rem_sockfd, &m, sizeof(m), 0);
-            /* Criando buffer */
 
             size_t recv_buffer_len = sizeof(recv_buffer);
-            /* Recebendo mensagem */
+
             recv(rem_sockfd, &recv_buffer[iCliente], recv_buffer_len, 0);
-            /* Imprimindo resultados */
-
-printf("\t Method: %c\n", recv_buffer[iCliente].method);
-printf("\t Size: %d\n", recv_buffer[iCliente].size);
-printf("\t Payload: %s\n", recv_buffer[iCliente].payload);
-
-            pthread_mutex_lock(&lock);
+           pthread_mutex_lock(&lock);
             int c ;
 
             for(c=0; c<recv_buffer[iCliente].size; c++) {
                 if (recv_buffer[iCliente].payload[c]) {
-                   // inserir(listaAmino, (recv_buffer[iCliente].payload[c]));
-                  
-                  
-                   // printf("%s hey", pont);
                    rewind(fProteina);
                    char file[700];
             while(fgets(file, 700, fProteina) != NULL) {
@@ -130,8 +117,7 @@ printf("\t Payload: %s\n", recv_buffer[iCliente].payload);
 
                 }
             }
-//printf("mostrando lista \n");
- //sleep(1);
+
             pthread_mutex_unlock(&lock);
             //mostrarLista(listaAmino);
             //sleep(5);
@@ -144,40 +130,14 @@ printf("\t Payload: %s\n", recv_buffer[iCliente].payload);
 }
 void *ribossomoFuncao() {
 
-    while(1) {
-
-        if(!isEmpty(listaAmino)) {
-
-            Node *tmp;
-            tmp = apagarPrimeiroNodo(listaAmino);
-
-            char c[700];
-            rewind(fProteina);
-            while(fgets(c, 700, fProteina) != NULL) {
-                char *proteinaMudada;
-                proteinaMudada = procuraAmino(c,&tmp->aminoacido,"-");
-                
-                if (proteinaMudada!="xx"){
-				 system("@cls||clear");
-                printf("\n %s", proteinaMudada);
-              	rewind(fProteina);
-                fprintf(fProteina,"%s \n", proteinaMudada);
-                sleep(1);
-            }
-
-               
-            }
-        }
-        //sleep(5);
-    }
 }
 
 main() {
     pthread_mutex_init(&lock, NULL);
-    listaAmino=iniciarLista();
-   // pthread_create(&servidor,NULL, servidorFuncao, NULL);
+
+
    // pthread_create(&ribossomo, NULL, ribossomoFuncao, NULL);
-    sleep(2);
+  //  sleep(2);
 
     FILE *fips;
     if ((fips = fopen("ips_servidores.txt", "r")) == NULL) {
@@ -197,12 +157,12 @@ main() {
         i++;
     }
 
-    //pthread_join(servidor, &thread_result_servidor);
+ 
   //  pthread_join(ribossomo, &thread_result_ribossomo);
 
     for(i=0; i<N_CLIENTES; i++) {
         pthread_join(cliente[i],&thread_result_cliente);
     }
     fclose(fProteina);
-
+return 0;
 }
