@@ -93,14 +93,15 @@ int main() {
     while((socket_cliente =	accept(loc_sockfd, (struct sockaddr *)&cli, &tamanho))) {
   		printf("-------------------Connection accepted %d ----------------- \n  ", cont);
 
-       if (pthread_create(&thread_id,NULL, servidorFuncao, &socket_cliente)<0){
-       	perror("Nao foi possivel criar a thread");
-       	return 1;
+       	if (pthread_create(&thread_id,NULL, servidorFuncao, &socket_cliente)<0){
+       		perror("Nao foi possivel criar a thread");
+       		return 1;
 	   }
-cont++;
-  // 	pthread_join(servidor, &thread_result_servidor);
+	cont++;
+
 
     }
+    close(loc_sockfd);
 return 0;
-   // close(loc_sockfd);
+
 }
