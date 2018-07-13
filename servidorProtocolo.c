@@ -12,9 +12,9 @@
 
 #define PORTA 1337
 char gerarAminoacido() {
-  //  char aminoacidos[61]= "ARRNNNNDCQEGGGGHHHHIIIIIIIILKMMMMMMMMFPPPPSTWWWWWWWWYYYYYYYYV";
- 	char aminoacidos[20]= "ARNDCQEGHILKMFPSTWYV";
-    int num = rand()%20;//61
+    char aminoacidos[61]= "ARRNNNNDCQEGGGGHHHHIIIIIIIILKMMMMMMMMFPPPPSTWWWWWWWWYYYYYYYYV";
+// char aminoacidos[20]= "ARNDCQEGHILKMFPSTWYV";
+    int num = rand()%61;//61
     return aminoacidos[num];
 }
 typedef struct {
@@ -27,10 +27,11 @@ typedef struct {
 
 void *servidorFuncao(void *socket){
 	int socketCliente = *(int*)socket;
+	int read_size;
         aatp_msg recv_buffer;
         size_t recv_buffer_len = sizeof(recv_buffer);
         /* Recebendo mensagem */
-        recv(socketCliente, &recv_buffer, recv_buffer_len, 0);
+        while((read_size = recv(socketCliente, &recv_buffer, recv_buffer_len, 0) > 0)){
 
         /* Inicializando mensagem */
        	aatp_msg m = { 0 };
@@ -54,6 +55,7 @@ void *servidorFuncao(void *socket){
 
         /* Enviando solicitação */
         int r = send(socketCliente, &m, sizeof(m), 0);
+	}
 
         close(socketCliente);
         return 0;
